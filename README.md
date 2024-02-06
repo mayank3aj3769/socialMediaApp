@@ -1,0 +1,1 @@
+## Social Media App written in typescript and Next.js 13
