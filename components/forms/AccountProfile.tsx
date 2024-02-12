@@ -25,6 +25,7 @@ import '../../app/globals.css'
 import { isBase64Image } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import { updateUser } from "@/lib/actions/user.actions";
+
 interface Props {
     user:{
         id: string;
@@ -112,7 +113,7 @@ const AccountProfile=({user,btnTitle}: Props) => {
           if (pathname ==='/profile/edit'){
             router.back();
           }else{
-            router.push('/')
+            router.push('/');
           }
       }
     

@@ -1,4 +1,3 @@
-import { Params } from 'next/dist/shared/lib/router/utils/route-matcher';
 "use server"
 
 import { connectToDB } from '../mongoose';
@@ -22,16 +21,17 @@ export async function updateUser({
     image,
     path,
 }:Params ) : Promise<void> {
-    connectToDB();  
+    
     try{
+        connectToDB();
         await User.findOneAndUpdate(
-            {id:userId},
+            {id: userId},
             {
-                username:username.toLowerCase(),
+                username: username.toLowerCase(),
                 name,
                 bio,
                 image,
-                onboarded:true,
+                onboarded: true,
             },
             {upsert: true} //  update or insert , whichever applicable
         );
