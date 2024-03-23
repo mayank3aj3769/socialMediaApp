@@ -47,6 +47,7 @@ export async function fetchUser(userId: string){
 
     try{
         connectToDB();
+        // console.log(`Inside fetchUser api - , params are , userId:${userId}`);
         return await User.findOne({ id: userId })
 
     }catch(error:any){

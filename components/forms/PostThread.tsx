@@ -1,90 +1,99 @@
-"use client"
+"use client";
 
+import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button"
-//import { Form } from "../ui/form";
-import {zodResolver} from '@hookform/resolvers/zod';
-
-import * as z from 'zod';
-
+import { useOrganization } from "@clerk/nextjs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-import { Textarea } from "../ui/textarea";
-
-import { usePathname,useRouter } from "next/navigation";
-import '../../app/globals.css'
-
-import { updateUser } from "@/lib/actions/user.actions";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 import { ThreadValidation } from "@/lib/validations/thread";
-import { createThread } from "@/lib/actions/thread.action";
+import { createThread } from "@/lib/actions/thread.actions";
 
 interface Props {
-    userId: string;    
+  userId: string;
 }
 
-const PostThread=({userId}: Props) => {
+function PostThread({ userId }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
 
-    const router = useRouter(); 
-    const pathname = usePathname();
+  //const { organization } = useOrganization();
 
-    const form =useForm({
-        resolver:zodResolver(ThreadValidation),
-        defaultValues:{
-            thread: '',
-            accountId: userId, 
-        }
-    });
+  const form = useForm<z.infer<typeof ThreadValidation>>({
+    resolver: zodResolver(ThreadValidation),
+    defaultValues: {
+      thread: "",
+      accountId: userId,
+    },
+  });
+  // const thread={...form};
+  // console.log(`form value inside PostThread.tsx ${thread}`);
 
-    const onSubmit = async(values:z.infer<typeof ThreadValidation>) =>{
-        await createThread({
-          text:values.thread,
-          author:userId,
-          communityId:null,
-          path: pathname
-     });
+  // const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
+  //   await createThread({
+  //     text: values.thread,
+  //     author: userId,
+  //     communityId: null,
+  //     path: pathname,
+  //   });
 
-     router.push("/")
+  //   router.push('/');
+  // };
+  const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
+    try {
+      console.log('Form submission values:', values);
+      await createThread({
+        text: values.thread,
+        author: userId,
+        communityId: null,
+        path: pathname,
+      });
+      console.log('Post thread successful, navigating to /');
+      router.push('/');
+    } catch (error) {
+      console.error('Error submitting form:', error);
     }
-    
-    return( 
+  };
+  
+  return (
     <Form {...form}>
-        <form 
-        className="flex flex-col justify-center gap-10"
-        onSubmit={form.handleSubmit(onSubmit)} 
-        ></form>
+      <form
+        className='mt-10 flex flex-col justify-start gap-10'
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
-            control={form.control}
-            name="thread"
-            render={({ field }) => (
-              <FormItem  className="flex flex-col w-full gap-3">
-                <FormLabel className="text-base-semibold text-light-2">
-                 Content
-                </FormLabel>
-                <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
-                  <Textarea
-                  rows={15}
-                  {...field}
-                  
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="bg-primary-500">
-              Post Thread
-          </Button>
+          control={form.control}
+          name='thread'
+          render={({ field }) => (
+            <FormItem className='flex w-full flex-col gap-3'>
+              <FormLabel className='text-base-semibold text-light-2'>
+                Content
+              </FormLabel>
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1'>
+                <Textarea rows={15} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type='submit' className='bg-primary-500'>
+          Post Thread
+        </Button>
+      </form>
     </Form>
-    )  
+  );
 }
 
 export default PostThread;
