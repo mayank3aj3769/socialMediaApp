@@ -37,19 +37,7 @@ function PostThread({ userId }: Props) {
       accountId: userId,
     },
   });
-  // const thread={...form};
-  // console.log(`form value inside PostThread.tsx ${thread}`);
 
-  // const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
-  //   await createThread({
-  //     text: values.thread,
-  //     author: userId,
-  //     communityId: null,
-  //     path: pathname,
-  //   });
-
-  //   router.push('/');
-  // };
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
     try {
       console.log('Form submission values:', values);
