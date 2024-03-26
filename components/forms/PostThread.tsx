@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { useOrganization } from "@clerk/nextjs";
+//import { useOrganization } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -37,19 +37,7 @@ function PostThread({ userId }: Props) {
       accountId: userId,
     },
   });
-  // const thread={...form};
-  // console.log(`form value inside PostThread.tsx ${thread}`);
 
-  // const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
-  //   await createThread({
-  //     text: values.thread,
-  //     author: userId,
-  //     communityId: null,
-  //     path: pathname,
-  //   });
-
-  //   router.push('/');
-  // };
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
     try {
       console.log('Form submission values:', values);
@@ -61,6 +49,7 @@ function PostThread({ userId }: Props) {
       });
       console.log('Post thread successful, navigating to /');
       router.push('/');
+    
     } catch (error) {
       console.error('Error submitting form:', error);
     }
