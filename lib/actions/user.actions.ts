@@ -48,8 +48,8 @@ export async function fetchUser(userId: string){
     try{
         connectToDB();
         // console.log(`Inside fetchUser api - , params are , userId:${userId}`);
-        return await User.findOne({ id: userId })
-
+        const users=await User.findOne({ id: userId });
+        return users;
     }catch(error:any){
         throw new Error(`Failed to fetch user:${error.message}`)
     }

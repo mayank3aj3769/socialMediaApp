@@ -13,7 +13,7 @@ interface Params {
 
 export async function createThread({ text,author,communityId,path }:Params ){
     try{
-        connectToDB(); 
+        await connectToDB(); 
         console.log(`Inside create Thread api , text:${text}  , author:${author} , communityId:${communityId}`);
         const createThread=await Thread.create({
             text,
@@ -73,7 +73,7 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
             });
             return postObj;
         });
-
+        
         const totalPostsCount = await Thread.countDocuments({ parentId: { $in: [null, undefined] } });
 
         const isNext = totalPostsCount > skipAmount + posts.length;

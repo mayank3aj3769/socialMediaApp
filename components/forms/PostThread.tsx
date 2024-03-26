@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { useOrganization } from "@clerk/nextjs";
+//import { useOrganization } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -49,6 +49,7 @@ function PostThread({ userId }: Props) {
       });
       console.log('Post thread successful, navigating to /');
       router.push('/');
+    
     } catch (error) {
       console.error('Error submitting form:', error);
     }

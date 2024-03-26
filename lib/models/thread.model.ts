@@ -1,4 +1,4 @@
-"use server"
+
 import mongoose from "mongoose";
 import { boolean } from "zod";
 
@@ -32,7 +32,7 @@ const threadSchema = new mongoose.Schema({
 
 });
 
- // Fetch a user , or create one if none exist
+ // Fetch a thread model , or create one if none exist
 const Thread=mongoose.models.Thread || mongoose.model('Thread',threadSchema);
 
 export default Thread;
