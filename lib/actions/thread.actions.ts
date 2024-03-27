@@ -22,10 +22,13 @@ export async function createThread({ text,author,communityId,path }:Params ){
         });
    
         // Update user model for the user who created the thread
-        await User.findByIdAndUpdate(author,{
-            $push: {thread:createThread._id}
-        });
-
+        // await User.findByIdAndUpdate(author,{
+        //     $push: {thread:createThread._id}
+        // });
+        const user=await User.findById(author);
+        
+        user.threads.push(createThread._id);
+        await user.save();
         revalidatePath(path);
     }catch(error){
         throw new Error(`Error creating thread:${error}`);
