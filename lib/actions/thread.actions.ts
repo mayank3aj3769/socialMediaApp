@@ -155,9 +155,12 @@ export async function addCommentToThread(
             const savedCommentThread=await commentThread.save();
 
             //update the original thread to include the new comment
+            //const newId=JSON.stringify(savedCommentThread._id);
+            console.log(`Inside addCommentToThread api --> savedCommentThread._id :${savedCommentThread._id}`);
             originalThread.children.push(savedCommentThread._id);
 
             //save the original thread
+            await originalThread.save(); // In mongoose the changes made to a document has to be explicitly saved.
 
             revalidatePath(path);
 
