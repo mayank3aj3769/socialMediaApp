@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import Thread from '../models/thread.model';
 import { getJsPageSizeInKb } from 'next/dist/build/utils';
 import { FilterQuery, SortOrder } from 'mongoose';
+import Community from '../models/community.model';
 
 interface Params{
     userId:string;
@@ -51,7 +52,10 @@ export async function fetchUser(userId: string){
     try{
         connectToDB();
         // console.log(`Inside fetchUser api - , params are , userId:${userId}`);
-        const users=await User.findOne({ id: userId });
+        const users=await User.findOne({ id: userId }).populate({
+            path: "communities",
+            model: Community,
+          });
         return users;
     }catch(error:any){
         throw new Error(`Failed to fetch user:${error.message}`)
@@ -68,11 +72,11 @@ export async function fetchUserPosts(userId: string) {
             path: "threads",
             model: Thread,
             populate: [
-            //   {
-            //     path: "community",
-            //     model: Community,
-            //     select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
-            //   },
+              {
+                path: "community",
+                model: Community,
+                select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+              },
             {
                 path: "children",
                 model: Thread,

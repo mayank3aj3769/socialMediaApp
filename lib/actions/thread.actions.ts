@@ -3,6 +3,7 @@ import { connectToDB } from "../mongoose";
 import Thread from "../models/thread.model";
 import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
+import Community from "../models/community.model";
 
 interface Params {
     text: string,
@@ -11,24 +12,38 @@ interface Params {
     path: string,
 }
 
-export async function createThread({ text,author,communityId,path }:Params ){
+export async function createThread({
+    text,
+    author,
+    communityId,
+    path  
+}:Params){
     try{
         await connectToDB(); 
-        console.log(`Inside create Thread api , text:${text}  , author:${author} , communityId:${communityId}`);
+        //console.log(`Inside create Thread api , text:${text}  , author:${author} , communityId:${communityId}`);
+        const communityIdObject = await Community.findOne(
+            {id:communityId},
+            {_id:1}
+        );
         const createThread=await Thread.create({
             text,
             author,
-            community:null
+            community: communityIdObject 
         });
    
         // Update user model for the user who created the thread
-        // await User.findByIdAndUpdate(author,{
-        //     $push: {thread:createThread._id}
-        // });
-        const user=await User.findById(author);
+        await User.findByIdAndUpdate(author,{
+            $push: {thread:createThread._id}
+        });
+        //const user=await User.findById(author);
         
-        user.threads.push(createThread._id);
-        await user.save();
+        // user.threads.push(createThread._id);
+        // await user.save();
+        if(communityIdObject){
+            await Community.findByIdAndUpdate(communityIdObject,{
+                $push:{threads:createThread._id},
+            });
+        }
         revalidatePath(path);
     }catch(error){
         throw new Error(`Error creating thread:${error}`);
@@ -50,6 +65,10 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
             model: User,
             select: "_id name image" 
         })
+        .populate({
+            path: "community",
+            model: Community,
+          })
         .populate({
             path: "children",
             populate: {
@@ -98,6 +117,11 @@ export async function fetchThreadById(id:string){
                 model : User,
                 select : "_id id name image"
             })
+            .populate({
+                path: "community",
+                model: Community,
+                select: "_id id name image",
+              }) // Populate the community field with _id and name
             .populate({
                 path:'children',
                 populate:[
