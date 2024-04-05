@@ -70,7 +70,7 @@ This project is set up to deploy to Vercel with zero configuration. Follow the [
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License.
 
 ## Acknowledgments
 
