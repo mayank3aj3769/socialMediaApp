@@ -29,7 +29,26 @@ const nextConfig = {
         hostname: "utfs.io",
       }
     ]
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/activity',
+        destination: '/app/root/activity/page', 
+      }
+    ];
   }
 };
+
+
+// const rewrites = async()=> {
+//     return [
+//       {
+//         source: '/activity',
+//         destination: '/app/root/activity/page', // Adjust the destination to match your file structure
+//       },
+//       // Add more rewrites as needed
+//     ];
+// }
 
 module.exports = nextConfig;
